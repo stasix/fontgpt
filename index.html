@@ -208,7 +208,7 @@
                                    titleWeight: 800,
                                    body: 'Sofia Pro',
                                    bodyFontName: 'sofia-pro',
-                                   bodyWeight: 400,
+                                   bodyWeight: 300,
                                },
                                {
                                    title: 'Poppins',
@@ -216,7 +216,7 @@
                                    titleWeight: 700,
                                    body: 'Sofia Pro',
                                    bodyFontName: 'sofia-pro',
-                                   bodyWeight: 400,
+                                   bodyWeight: 300,
                                },
                                {
                                    title: 'Plus Jakarta Sans',
@@ -264,23 +264,23 @@
                                    toolbar.innerHTML = `
                     <button>
                         <i class="fas fa-images"></i>
-                        <span>photos</span>
+                        <span class="toolbar-button-text">photos</span>
                     </button>
                     <button>
                         <i class="material-icons">font_download</i>
-                        <span>text</span>
+                        <span class="toolbar-button-text">text</span>
                     </button>
                     <button>
                         <i class="fas fa-shapes"></i>
-                        <span>graphics</span>
+                        <span class="toolbar-button-text">graphics</span>
                     </button>
                     <button>
                         <i class="material-icons">auto_awesome</i>
-                        <span>overlay</span>
+                        <span class="toolbar-button-text">overlay</span>
                     </button>
                     <button>
                         <i class="fas fa-paint-roller"></i>
-                        <span>background</span>
+                        <span class="toolbar-button-text">background</span>
                     </button>
                 `;
                 
@@ -305,6 +305,15 @@
                 createPage(fontPair, index);
             });
             
+            // Set the initial font for the toolbar button titles
+            const initialToolbarButtonTitleStyle = document.createElement('style');
+            initialToolbarButtonTitleStyle.innerHTML = `
+                .toolbar-button-text {
+                    font-family: ${fontPairs[0].bodyFontName};
+                }
+            `;
+            document.head.appendChild(initialToolbarButtonTitleStyle);
+            
             
             const dots = document.querySelectorAll('.dot');
             
@@ -327,6 +336,15 @@
                 
                 titleFontInfo.textContent = fontPairs[pageIndex].title;
                 bodyFontInfo.textContent = fontPairs[pageIndex].body;
+                
+                // Update the font for the toolbar button titles
+                const toolbarButtonTitleStyle = document.createElement('style');
+                toolbarButtonTitleStyle.innerHTML = `
+                    .toolbar-button-text {
+                        font-family: ${fontPairs[pageIndex].bodyFontName};
+                    }
+                `;
+                document.head.appendChild(toolbarButtonTitleStyle);
                 
             });
             
@@ -384,18 +402,18 @@
                 },
             };
 
-            function updateLanguage(lang) {
-                const title = document.querySelector('h1');
-                const bodyText = document.querySelector('p');
-                const toolbarButtons = document.querySelectorAll('.toolbar button span');
+            function updateLanguage(language) {
+              const translation = translations[language];
 
-                title.innerHTML = translations[lang].title;
-                bodyText.innerText = translations[lang].body;
+              document.querySelectorAll('.font-pair').forEach((fontPair) => {
+                fontPair.querySelector('h1').innerHTML = translation.title;
+                fontPair.querySelector('p').innerText = translation.body;
+              });
 
-                const toolbarLabels = Object.values(translations[lang].toolbar);
-                toolbarButtons.forEach((button, index) => {
-                    button.innerText = toolbarLabels[index];
-                });
+              const toolbarKeys = Object.keys(translations.en.toolbar);
+              document.querySelectorAll('.toolbar-button-text').forEach((buttonText, index) => {
+                buttonText.innerText = translation.toolbar[toolbarKeys[index]];
+              });
             }
 
             
